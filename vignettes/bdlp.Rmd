@@ -1,0 +1,259 @@
+---
+title: "The Benchmark Data Library Project - a Framework for Artificial Data Generation"
+author: "Rainer Dangl "
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+#Introduction
+
+The Benchmark Data Library Project introduces a new way to approach
+the design and generation of artificial data. It is not primarily 
+aimed to be a dedicated data generator - it rather provides a 
+framework to enable the researcher to efficiently code 
+easily understandable and reproducible artificial data. The 
+entire concept is based on the notion of merely working with 
+a standardized format for the metadata. All information that is 
+needed for actual data generation is found in a single .R file, 
+the format of which is strictly prescribed.
+
+#How can I get data?
+
+That depends on whether you have a suitable .R file. You can either 
+obtain one from the metadata repository that serves as a common place
+to share benchmarking setups ([BDLP Repository](https://rdangl.shinyapps.io/bdlp_2/)). If
+you do not have such a file, you need to write one yourself - the package 
+does not provide an implementation that allows immediate data generation by 
+just calling a function and passing a few arguments. A .R file (which shall 
+be called setup file in the following) is absolutely necessary.
+
+If you have a setup file - such a file containing a VERY simple benchmarking
+setup that consists of two simple metric 2d datasets is included in the package
+and can be sourced with
+
+```{r}
+library(bdlp)
+source(system.file("dangl2014.R", package = "bdlp"))
+```
+
+The file only contains one function which has to be of the same name 
+as the file name - always authorYEAR. If several benchmarking setups 
+are available for the same author in one year, additional indication of 
+this fact by authorYEARa/b/c/etc. are permissible. This function can return 
+two things; either a summary about the setup:
+
+```{r}
+dangl2014(info=T)
+```
+
+or a metadata object of one of the two available datasets. This is 
+done by merely providing the the set nr and results in the following object:
+
+```{r}
+library(MASS)
+meta <- dangl2014(setnr=1)
+meta
+```
+
+The object consists of several slots. Most importantly, the slot `genfunc`
+contains the random number generating function (in this case the default `mvrnorm`).
+The second important slot is `clusters`, which contains the parameters that are needed by 
+`genfunc` to generate data. It is important to notice that the parameters in `clusters` are
+identical to the arguments needed by `genfunc`. Two other slots are quite crucial for 
+processing the metadata object: `metaseedinfo` and `seedinfo`. The former sets the random number 
+generator parameters for the purpose of calculating the metadata object. For example, if the 
+cluster centers were to be chosen randomly and not in a fixed way like in the case at hand, the 
+`metaseedinfo` parameters ensure reproducibility of a particular metadata object. The latter, 
+`seedinfo`, is information that is sent along with the metadata object to the the function that 
+generates the actual random numbers of the dataset. It can be practical to have these two sets 
+of random number generator parameters - if not needed, they default to the same set of arguments.
+Therefore, if a metadata object has been created, one can generate the actual numbers. This can 
+be done for one single data set from this particular metadata scenario by
+
+```{r}
+library(MASS)
+data <- generateData(meta)
+head(data)
+```
+
+If a different random number seed is needed this can be done by
+
+```{r}
+meta <- dangl2014(1, seedinfo = list(120, "3.1.3", c("Mersenne-Twister", "Inversion")))
+data <- generateData(meta)
+head(data)
+```
+
+This data can then be plotted with the commonly used plot functions. Yet still, 
+it is also possible to catch a glimpse of the structure of the data by plotting a metadata 
+object directly. For this purpose, an instance of the dataset is generated automatically, which
+saves a few steps in-between.
+
+```{r, fig.width=5, fig.height=5, fig.align='center'}
+meta <- dangl2014(setnr=1)
+plotMetadata(meta)
+```
+
+However, generally one may require for benchmarking purposes a large 
+number of datasets drawn from one particular metadata scenario. This 
+works as follows:
+
+```{r results="hide", message=F, warning=F}
+generateDatabase(name = system.file("dangl2014.R", package = "bdlp"), setnr = 1, draws = 50)
+```
+
+Which creates an SQLite database in the current working directory that contains 
+50 datasets drawn from matadata object 1 of the setup name. Of course, `metaseedinfo` and 
+`seedinfo` is also available here. The random number seed starts at a certain base value 
+(default 100) and increments by 1 for each draw. Therefore draw number 1 uses seed 101, etc. 
+If a different increment step is desired, one can set the argument `increment` to this value.
+
+#How does it work?
+
+In order to explore the concept in more depth we look at the function body that is in the 
+included setup file:
+
+```{r}
+dangl2014 <- function(setnr = NULL, 
+                      seedinfo = list(100, 
+                                      paste(R.version$major, R.version$minor, sep = "."),
+                                      RNGkind()), 
+                      info = FALSE, 
+                      metaseedinfo = list(100, 
+                                          paste(R.version$major, R.version$minor, sep = "."),
+                                          RNGkind())){
+
+  inf <- data.frame(n = c(50, 40), k = c(2,2), shape = c("spherical", "spherical"))
+  ref <- "Dangl R. (2014) A small simulation study. Journal of Simple Datasets 10(2), 1-10"
+  if(info == T) return(list(summary = inf, reference = ref))
+
+  if(is.null(metaseedinfo)) metaseedinfo <- seedinfo
+
+  set.seed(metaseedinfo[[1]])
+  RNGversion(metaseedinfo[[2]])
+  RNGkind(metaseedinfo[[3]][1], metaseedinfo[[3]][2])
+
+  if(setnr == 1) {
+    return(new("metadata.metric", 
+      clusters = list(c1 = list(n = 25, mu = c(4,5), Sigma=diag(1,2)),
+                      c2 = list(n = 25, mu = c(-1,-2), Sigma=diag(1,2))),
+      genfunc = MASS::mvrnorm, seedinfo = seedinfo))
+  }
+  if(setnr == 2){
+    return(new("metadata.metric", 
+      clusters = list(c1 = list(n = 20, mu = c(0,2), Sigma=diag(1,2)),
+                      c2 = list(n = 20, mu = c(-1,-2), Sigma=diag(1,2))),
+      genfunc = MASS::mvrnorm, seedinfo = seedinfo))
+  }
+}
+```
+
+Again, we can see that the first part of the function provides the information output 
+that has already been described above. The second half of the function specifies the 
+metadata objects. The function arguments are fixed and must not be changed. In the middle, 
+the metaseedinfo parameters are applied in case random effects are used in metadata generation, 
+and the seedinfo parameters are passed on to the metadata object output. This is certainly 
+a simple example; much more complex scenarios can be realised. The package functions
+merely assemble the dataset based on the parameters supplied in the setup file cluster by cluster. 
+Therefore, any random number generating function of any R package can be used. Still, also 
+custom functions written from scratch can be used and included in the setup file. The only 
+strict limitation that is imposed on the setup file is that the main function that is then 
+used for data generation must produce the metadata files according to the structure defined in 
+the package.
+
+#How can I write a new benchmarking setup?
+
+Essentially, by writing a new setup file that complies with a few important rules:
+
+* the file name in the already mentioned format authorYEAR
+* the file has to contain at least one function with the same name as the setup file
+* the arguments of the main function are prescribed (setnr, seedinfo, info, metaseedinfo - 
+exactly like in the example function above)
+* the main function has to return an info table and a reference if argument `info = T`, or 
+a metadata object (for a specific `setnr` and `metaseedinfo`)
+* should auxiliary functions be included in the setup file, it is strongly advised to 
+name them in the format `authorYear_myfunc` in order to avoid conflicts with other setup files 
+which could coincidentally contain identically named functions
+
+At the moment, 5 types of metadata objects are supported: metric, ordinal, binary, functional and 
+random string data. It is of course possible to have several types of metadata in a 
+benchmarking setup. At the moment it is not yet possible to have a metadata object that
+mixes several types of data in one dataset (e.g. some metric, ordinal and binary variables), 
+but support for this is planned for the next release.
+
+The setup file does not need to be created completely from scratch; two function can 
+do that to different degrees. Function `createFileskeleton` creates a blank template that 
+fills in the most important information (function names, arguments, return values etc.). 
+A much more convenient solution is saveSetup - if several metadata objects have been created 
+(this in turn can be done with the help of `initializeObject`), a setup file can be written 
+to the disk without any further action necessary. It can be used immediately for data generation.
+A simple example looks as follows:
+
+```{r results="hide", message=F, warning=F}
+require(MASS)
+m1 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
+m1@clusters$cl1 <- list(n = 25, mu = c(4,5), Sigma = diag(1,2))
+m1@clusters$cl2 <- list(n = 25, mu = c(-1,-2), Sigma = diag(1,2))
+
+m2 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
+m2@clusters$cl1 <- list(n = 44, mu = c(1,2), Sigma = diag(1,2))
+m2@clusters$cl2 <- list(n = 66, mu = c(-5,-6), Sigma = diag(1,2))
+
+saveSetup(name="miller2012.R", author="Mister Miller", mail="mister.miller@edu.com",
+            inst="Unknown University", cit="Simple Data, pp. 23-24", objects=list(m1, m2),
+            table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))
+
+generateDatabase(name = "miller2012.R", setnr = 1, draws = 20)
+```
+
+The procedure is basically identical for ordinal, binary and random string data. Functional 
+data requires a structurally quite different metadata object. It is advised to have a look at 
+the class description for functional metadata in the package manual. An example for functional 
+data works as follows:
+
+```{r}
+Fun1 <- function(x){x^2}
+Fun2 <- function(x){sqrt(x)}
+Fun3 <- function(x){sin(2*pi*x)}
+functions <- list(Fun1 = Fun1, Fun2 = Fun2, Fun3 = Fun3)
+
+interval <- c(0,1)
+gridPoints <- 30
+
+sd <- 0.2
+n <- 100
+minTimePoints <- 5
+maxTimePoints <- 10
+regular <- FALSE
+
+grid <- sampleGrid(n, minTimePoints, maxTimePoints, gridPoints, regular)
+
+meta <- new("metadata.functional", functions = functions, 
+                                   gridMatrix = grid,
+                                   sd=sd,
+                                   sd_distribution="rnorm",
+                                   interval = interval, 
+                                   resolution=gridPoints,
+                                   total_n = n, 
+                                   minTimePoints = minTimePoints, 
+                                   maxTimePoints = maxTimePoints, 
+                                   regular=F)
+
+data <- generateData(meta)
+head(data)
+```
+
+#Storing and sharing setup files
+
+New setup files that are used in actual benchmarking studies can be added to the repository of 
+the Benchmark Data Library Project (link above), which is highly appreciated! This might greatly 
+help other researchers who like to use artificial data in their studies and who do not want to 
+reinvent the wheel. Furthermore, benchmarking studies are much more meaningful if methods can 
+be compared on the exact same data from another study. This is actually one of the major effects 
+that are intended to come along with using this package.
+
+
