@@ -1,8 +1,8 @@
 Package: bdlp
-Version: 0.9-1
-Date: 2017-05-31
+Version: 0.9-2
+Date: 2021-01-03
 Authors@R: c(person(given="Rainer", family="Dangl",
-        email="rainer.dangl@boku.ac.at", role=c("aut", "cre")))
+        email="rainer.dangl@bildung.gv.at", role=c("aut", "cre")))
 Title: Transparent and Reproducible Artificial Data Generation
 Depends: R (>= 3.0.0), graphics
 Imports: GenOrd, MultiOrd, stringdist, rgl, RSQLite, MASS, DBI,
@@ -15,11 +15,11 @@ Description: The main function generateDataset() processes a user-supplied .R fi
 License: GPL-2
 LazyLoad: yes
 Author: Rainer Dangl [aut, cre]
-Maintainer: Rainer Dangl <rainer.dangl@boku.ac.at>
-RoxygenNote: 6.0.1
+Maintainer: Rainer Dangl <rainer.dangl@bildung.gv.at>
+RoxygenNote: 7.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-06-06 19:15:49 UTC; raine
+Packaged: 2021-01-05 18:39:48 UTC; raine
 Repository: CRAN
-Date/Publication: 2017-06-06 22:30:30 UTC
+Date/Publication: 2021-01-10 15:10:05 UTC

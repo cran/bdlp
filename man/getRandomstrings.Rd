@@ -4,8 +4,13 @@
 \alias{getRandomstrings}
 \title{Generates random strings}
 \usage{
-getRandomstrings(center = NULL, maxdist = NULL, length = nchar(center),
-  n = 1, method = "lv")
+getRandomstrings(
+  center = NULL,
+  maxdist = NULL,
+  length = nchar(center),
+  n = 1,
+  method = "lv"
+)
 }
 \arguments{
 \item{center}{Reference string, i.e. the cluster center}

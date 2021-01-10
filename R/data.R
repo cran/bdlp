@@ -8,9 +8,12 @@
 #' @param file A custom file name for the output database. Defaults to the pattern setupname_setnr_seed.db
 #' @param seedincrement The random number seed will by default increase by 1 for each draw from the base seed given in seedinfo unless specified otherwise here
 #' @return An SQLite database that contains the desired number of data sets drawn from a certain metadata scenario
-#  @examples
-#  source(system.file("dangl2014.R", package="bdlp"))
-#  generateDatabase(name="dangl2014.R", setnr=1, draws=10)
+#' @examples
+#' \dontrun{
+#' source(system.file("dangl2014.R", package="bdlp"))
+#' generateDatabase(name="dangl2014.R", setnr=1, draws=10)
+#' unlink("dangl2014_set_1_seed_100.db")
+#' }
 #' @export
 #' @importFrom utils capture.output txtProgressBar setTxtProgressBar
 generateDatabase <- function(name = NULL, setnr = NULL, draws = 1,  
@@ -277,6 +280,7 @@ writeDatabase <- function(output, dbname, draw){
     RSQLite::dbWriteTable(con, paste("draw", draw, sep="_"), output, row.names=FALSE)
   else
     RSQLite::dbWriteTable(con, paste("draw", draw, sep="_"), output, append=T, row.names=FALSE)
+  RSQLite::dbDisconnect(con)
 }
 
 

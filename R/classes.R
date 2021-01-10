@@ -13,7 +13,7 @@ setClass("metadata.general",
 #                        k = "numeric"),
          validity = function(object){
                       retval <- NULL
-                      #checking whethere there are exactly as many entries in 'clusters' than the number in 'k'
+                      #checking whether there are exactly as many entries in 'clusters' than the number in 'k'
 #                      if(length(object@clusters) != object@k)
 #                        retval <- "No. of list entries in slot 'clusters' and no. of clusters in slot 'k' do not match"
                       #checking whether k does not exceed the number of observations

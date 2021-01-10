@@ -4,9 +4,16 @@
 \alias{createFileskeleton}
 \title{Create a new setup file template}
 \usage{
-createFileskeleton(newname, mail, inst, author, type = c("metric",
-  "functional", "ordinal", "binary", "randomstring", "wordnet"),
-  infotable = NULL, ref = "Unpublished", codefile = F)
+createFileskeleton(
+  newname,
+  mail,
+  inst,
+  author,
+  type = c("metric", "functional", "ordinal", "binary", "randomstring", "wordnet"),
+  infotable = NULL,
+  ref = "Unpublished",
+  codefile = F
+)
 }
 \arguments{
 \item{newname}{The name of the new setup (and subsequently the file name)}

@@ -4,10 +4,16 @@
 \alias{generateDatabase}
 \title{Generates a number of datasets from one metadata scenario}
 \usage{
-generateDatabase(name = NULL, setnr = NULL, draws = 1,
-  seedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."),
-  RNGkind()), metaseedinfo = list(100, paste(R.version$major, R.version$minor,
-  sep = "."), RNGkind()), file = NULL, seedincrement = 1)
+generateDatabase(
+  name = NULL,
+  setnr = NULL,
+  draws = 1,
+  seedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."), RNGkind()),
+  metaseedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."),
+    RNGkind()),
+  file = NULL,
+  seedincrement = 1
+)
 }
 \arguments{
 \item{name}{The path to the setup file}
@@ -29,4 +35,11 @@ An SQLite database that contains the desired number of data sets drawn from a ce
 }
 \description{
 Generates a number of datasets from one metadata scenario
+}
+\examples{
+\dontrun{
+source(system.file("dangl2014.R", package="bdlp"))
+generateDatabase(name="dangl2014.R", setnr=1, draws=10)
+unlink("dangl2014_set_1_seed_100.db")
+}
 }

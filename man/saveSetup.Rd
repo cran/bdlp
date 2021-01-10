@@ -4,10 +4,20 @@
 \alias{saveSetup}
 \title{Saves a list of metadata objects to a new setup file}
 \usage{
-saveSetup(name, author, mail, inst, cit = "Unpublished", objects, table,
-  seedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."),
-  RNGkind()), metaseedinfo = list(100, paste(R.version$major, R.version$minor,
-  sep = "."), RNGkind()), custom_funcs = NULL, custom_name = NULL)
+saveSetup(
+  name,
+  author,
+  mail,
+  inst,
+  cit = "Unpublished",
+  objects,
+  table,
+  seedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."), RNGkind()),
+  metaseedinfo = list(100, paste(R.version$major, R.version$minor, sep = "."),
+    RNGkind()),
+  custom_funcs = NULL,
+  custom_name = NULL
+)
 }
 \arguments{
 \item{name}{The name of the new setup (and thus also the filename)}
@@ -48,7 +58,10 @@ b = new("metadata.metric",
         clusters = list(c1 = list(n = 44, mu = c(1,2), Sigma=diag(1,2)),
                         c2 = list(n = 66, mu = c(-5,-6), Sigma=diag(1,2))),
                         genfunc = mvrnorm)
-saveSetup(name="test2002.R", author="Mister Twister", mail="mister.twister@edu.com",
-           inst="Twister University", cit="Simple Data, pp. 23-24", objects=list(a, b),
-           table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))  
+\dontrun{
+saveSetup(name="doe2002.R", author="John Dow", mail="john.doe@edu.com",
+           inst="Example University", cit="Simple Data, pp. 23-24", objects=list(a, b),
+           table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))
+unlink("doe2002.R")
+}        
 }

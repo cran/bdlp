@@ -4,12 +4,12 @@ author: "Rainer Dangl "
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{The Benchmark Data Library Project - a Framework for Artificial Data Generation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
 ---
-#Introduction
+# Introduction
 
 The Benchmark Data Library Project introduces a new way to approach
 the design and generation of artificial data. It is not primarily 
@@ -21,7 +21,7 @@ a standardized format for the metadata. All information that is
 needed for actual data generation is found in a single .R file, 
 the format of which is strictly prescribed.
 
-#How can I get data?
+# How can I get data?
 
 That depends on whether you have a suitable .R file. You can either 
 obtain one from the metadata repository that serves as a common place
@@ -83,7 +83,7 @@ head(data)
 If a different random number seed is needed this can be done by
 
 ```{r}
-meta <- dangl2014(1, seedinfo = list(120, "3.1.3", c("Mersenne-Twister", "Inversion")))
+meta <- dangl2014(1, seedinfo = list(120, "4.0.3", c("Mersenne-Twister", "Inversion")))
 data <- generateData(meta)
 head(data)
 ```
@@ -102,7 +102,7 @@ However, generally one may require for benchmarking purposes a large
 number of datasets drawn from one particular metadata scenario. This 
 works as follows:
 
-```{r results="hide", message=F, warning=F}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE, results="hide"}
 generateDatabase(name = system.file("dangl2014.R", package = "bdlp"), setnr = 1, draws = 50)
 ```
 
@@ -112,7 +112,7 @@ Which creates an SQLite database in the current working directory that contains
 (default 100) and increments by 1 for each draw. Therefore draw number 1 uses seed 101, etc. 
 If a different increment step is desired, one can set the argument `increment` to this value.
 
-#How does it work?
+# How does it work?
 
 In order to explore the concept in more depth we look at the function body that is in the 
 included setup file:
@@ -165,7 +165,7 @@ strict limitation that is imposed on the setup file is that the main function th
 used for data generation must produce the metadata files according to the structure defined in 
 the package.
 
-#How can I write a new benchmarking setup?
+# How can I write a new benchmarking setup?
 
 Essentially, by writing a new setup file that complies with a few important rules:
 
@@ -193,7 +193,7 @@ A much more convenient solution is saveSetup - if several metadata objects have 
 to the disk without any further action necessary. It can be used immediately for data generation.
 A simple example looks as follows:
 
-```{r results="hide", message=F, warning=F}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE, results="hide"}
 require(MASS)
 m1 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
 m1@clusters$cl1 <- list(n = 25, mu = c(4,5), Sigma = diag(1,2))
@@ -203,8 +203,8 @@ m2 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
 m2@clusters$cl1 <- list(n = 44, mu = c(1,2), Sigma = diag(1,2))
 m2@clusters$cl2 <- list(n = 66, mu = c(-5,-6), Sigma = diag(1,2))
 
-saveSetup(name="miller2012.R", author="Mister Miller", mail="mister.miller@edu.com",
-            inst="Unknown University", cit="Simple Data, pp. 23-24", objects=list(m1, m2),
+saveSetup(name="miller2012.R", author="John Miller", mail="john.miller@edu.com",
+            inst="Example University", cit="Simple Data, pp. 23-24", objects=list(m1, m2),
             table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))
 
 generateDatabase(name = "miller2012.R", setnr = 1, draws = 20)
@@ -247,7 +247,7 @@ data <- generateData(meta)
 head(data)
 ```
 
-#Storing and sharing setup files
+# Storing and sharing setup files
 
 New setup files that are used in actual benchmarking studies can be added to the repository of 
 the Benchmark Data Library Project (link above), which is highly appreciated! This might greatly 

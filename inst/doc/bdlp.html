@@ -1,65 +1,324 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Rainer Dangl" />
 
-<meta name="date" content="2017-06-06" />
+<meta name="date" content="2021-01-05" />
 
 <title>The Benchmark Data Library Project - a Framework for Artificial Data Generation</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,8 +328,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">The Benchmark Data Library Project - a Framework for Artificial Data Generation</h1>
-<h4 class="author"><em>Rainer Dangl</em></h4>
-<h4 class="date"><em>2017-06-06</em></h4>
+<h4 class="author">Rainer Dangl</h4>
+<h4 class="date">2021-01-05</h4>
 
 
 
@@ -82,10 +341,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>How can I get data?</h1>
 <p>That depends on whether you have a suitable .R file. You can either obtain one from the metadata repository that serves as a common place to share benchmarking setups (<a href="https://rdangl.shinyapps.io/bdlp_2/">BDLP Repository</a>). If you do not have such a file, you need to write one yourself - the package does not provide an implementation that allows immediate data generation by just calling a function and passing a few arguments. A .R file (which shall be called setup file in the following) is absolutely necessary.</p>
 <p>If you have a setup file - such a file containing a VERY simple benchmarking setup that consists of two simple metric 2d datasets is included in the package and can be sourced with</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(bdlp)
-<span class="kw">source</span>(<span class="kw">system.file</span>(<span class="st">&quot;dangl2014.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;bdlp&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(bdlp)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">source</span>(<span class="kw">system.file</span>(<span class="st">&quot;dangl2014.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;bdlp&quot;</span>))</span></code></pre></div>
 <p>The file only contains one function which has to be of the same name as the file name - always authorYEAR. If several benchmarking setups are available for the same author in one year, additional indication of this fact by authorYEARa/b/c/etc. are permissible. This function can return two things; either a summary about the setup:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dangl2014</span>(<span class="dt">info=</span>T)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">dangl2014</span>(<span class="dt">info=</span>T)</span></code></pre></div>
 <pre><code>## $summary
 ##    n k     shape
 ## 1 50 2 spherical
@@ -94,9 +353,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## $reference
 ## [1] &quot;Dangl R. (2014) A small simulation study. Journal of Simple Datasets 10(2), 1-10&quot;</code></pre>
 <p>or a metadata object of one of the two available datasets. This is done by merely providing the the set nr and results in the following object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
-meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dt">setnr=</span><span class="dv">1</span>)
-meta</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(MASS)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dt">setnr=</span><span class="dv">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>meta</span></code></pre></div>
 <pre><code>## An object of class &quot;metadata.metric&quot;
 ## Slot &quot;standardization&quot;:
 ## [1] &quot;NONE&quot;
@@ -136,11 +395,11 @@ meta</code></pre></div>
 ##     if (!all(dim(Sigma) == c(p, p))) 
 ##         stop(&quot;incompatible arguments&quot;)
 ##     if (EISPACK) 
-##         stop(&quot;'EISPACK' is no longer supported by R&quot;, domain = NA)
+##         stop(&quot;&#39;EISPACK&#39; is no longer supported by R&quot;, domain = NA)
 ##     eS &lt;- eigen(Sigma, symmetric = TRUE)
 ##     ev &lt;- eS$values
 ##     if (!all(ev &gt;= -tol * abs(ev[1L]))) 
-##         stop(&quot;'Sigma' is not positive definite&quot;)
+##         stop(&quot;&#39;Sigma&#39; is not positive definite&quot;)
 ##     X &lt;- matrix(rnorm(p * n), n)
 ##     if (empirical) {
 ##         X &lt;- scale(X, TRUE, FALSE)
@@ -157,7 +416,7 @@ meta</code></pre></div>
 ##         drop(X)
 ##     else t(X)
 ## }
-## &lt;bytecode: 0x000000001c6af678&gt;
+## &lt;bytecode: 0x0000000024178050&gt;
 ## &lt;environment: namespace:MASS&gt;
 ## 
 ## Slot &quot;seedinfo&quot;:
@@ -165,14 +424,14 @@ meta</code></pre></div>
 ## [1] 100
 ## 
 ## [[2]]
-## [1] &quot;3.3.3&quot;
+## [1] &quot;4.0.3&quot;
 ## 
 ## [[3]]
-## [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;</code></pre>
+## [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</code></pre>
 <p>The object consists of several slots. Most importantly, the slot <code>genfunc</code> contains the random number generating function (in this case the default <code>mvrnorm</code>). The second important slot is <code>clusters</code>, which contains the parameters that are needed by <code>genfunc</code> to generate data. It is important to notice that the parameters in <code>clusters</code> are identical to the arguments needed by <code>genfunc</code>. Two other slots are quite crucial for processing the metadata object: <code>metaseedinfo</code> and <code>seedinfo</code>. The former sets the random number generator parameters for the purpose of calculating the metadata object. For example, if the cluster centers were to be chosen randomly and not in a fixed way like in the case at hand, the <code>metaseedinfo</code> parameters ensure reproducibility of a particular metadata object. The latter, <code>seedinfo</code>, is information that is sent along with the metadata object to the the function that generates the actual random numbers of the dataset. It can be practical to have these two sets of random number generator parameters - if not needed, they default to the same set of arguments. Therefore, if a metadata object has been created, one can generate the actual numbers. This can be done for one single data set from this particular metadata scenario by</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
-data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
-<span class="kw">head</span>(data)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">library</span>(MASS)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">head</span>(data)</span></code></pre></div>
 <pre><code>##         V1       V2
 ## 1 3.022824 6.146590
 ## 2 4.127758 6.030671
@@ -181,9 +440,9 @@ data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
 ## 5 4.225362 6.570782
 ## 6 4.239723 4.162089</code></pre>
 <p>If a different random number seed is needed this can be done by</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dv">1</span>, <span class="dt">seedinfo =</span> <span class="kw">list</span>(<span class="dv">120</span>, <span class="st">&quot;3.1.3&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Mersenne-Twister&quot;</span>, <span class="st">&quot;Inversion&quot;</span>)))
-data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
-<span class="kw">head</span>(data)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dv">1</span>, <span class="dt">seedinfo =</span> <span class="kw">list</span>(<span class="dv">120</span>, <span class="st">&quot;4.0.3&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Mersenne-Twister&quot;</span>, <span class="st">&quot;Inversion&quot;</span>)))</span>
+<span id="cb8-2"><a href="#cb8-2"></a>data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">head</span>(data)</span></code></pre></div>
 <pre><code>##         V1       V2
 ## 1 3.647198 4.677243
 ## 2 4.292669 4.307122
@@ -192,48 +451,48 @@ data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
 ## 5 3.806678 6.125037
 ## 6 3.869850 4.494429</code></pre>
 <p>This data can then be plotted with the commonly used plot functions. Yet still, it is also possible to catch a glimpse of the structure of the data by plotting a metadata object directly. For this purpose, an instance of the dataset is generated automatically, which saves a few steps in-between.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dt">setnr=</span><span class="dv">1</span>)
-<span class="kw">plotMetadata</span>(meta)</code></pre></div>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAHgCAMAAABKCk6nAAAAV1BMVEUAAAAAADoAAGYAOjoAOpAAZrY6AAA6ADo6AGY6Ojo6kNtmAABmtv+QOgCQZgCQtpCQ2/+2ZgC2/7a2///bkDrb/9vb////AAD/tmb/25D//7b//9v///8Eo6HgAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAME0lEQVR4nO2dC3fiOBJGTQ/J7MTNTtjxBAf4/79zMSa8nVhWyZI+3XtOZx5HXVK4lFQWWK72IE0VewAQFgSLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsUxFlzBTMQSbBsOhkCwOAgWB8HiIFgcBIuDYHEQnCwO17DfRTFvGCWcINXe5FVCcKJUVz/941g2jBJODwSLg2B1btbg6QUXgpPlSmrV/+eUFw3BGXB8sTq9E141BGdAP1tPu25CcAYgWJ2qn6ERLMupwmINThyv7WWq6OQx2l527tO2YZRwWWC1OTWhU8uGUcJlgYtgm88KR3fn0vDI+tc/+8/Xqlq8m4TTwEGw3WQeRvDR758Hudv6t0E4FUZrM5zMgwje1m8HyS/dvzbLD+9wOoydeNMX/Hu/W711/9oecvk6ivMdFUVyEez9SgWaog/Z25DB06nu/vhFsm3Ysa1//XNM4XaoypIVbDQ5Xe9ceQUMdZnU9hPxi1G4bLDdy0hY8MzhUsF4LwPBqWG9WVV5T/kINsV8N7Lz6xju9i2BYFuMP0+Y8Ia5GwGCjbG9xHcXfP83EJw0CFbHecpHcGY4T/mswepQRRcFgh3J7YMwBLthfJ0bHgQ7Yb5TFRwEO4HgSOHmIopgv6/LmzeMEm42Rq7BlqWY37KPYEdGqbMsxTwnDQQHwHQiR3B6WHwR4zxRIDg9/AVfz/GswenhuwbfvkOootPDs4o2XMQRnCIIVsfuOgvBaZL6/cFzh4MhEDwr94kZ/tNlBM/J/dI6cal1eVsgeEaef+PR+aVwelsgeEZsBLv9LQTPCILVMVmDEZwwJlU0a7A6VNFwBsHiIFgcBKdDkH1LBEfk8T5A+5cFwfG4NWr4If99J7YNo4TLkTujCFYDwdkyrlp6tjPNGpwDY0097ExTRWfB+Ln2B6MmwhFsjtViajNlI9gcI8GmYSwbRgmXFJapl7bgz9eBZ65oC7ZcPNMUvK0vD9+4fSjHpHCFkvIa3FbHR66UmsFGpFxFb+vuaSuPgnmsztwEW4PXi3cyOAHCFVlN9Ybg+ASsoj9f/0BwdEJeJu1WFYJjw0aHOAgWB8HiIFgcBIuDYHEQLA6C0ybRR7zPHk4V/48MEZwyBh/6IzhlECwOgtVhDVaHKloSw680ITglTmJtvk95CmneMEo4DU5ire59cQuD4OB8iUWwKAgW5yyWNViUs1iqaFEC3PGBYHEQLA6CxUGwOAj2Iv37YBHsg+UFayAQ7IHpllMgEOwBgmcLFwcEzxYuEqzBc4WLBVX0TOFgCASLg2BxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDiBBDdV1Z8V3fDUlbiEEdws3vfb+mWP4OgEEbxbvR1/Lj8QHJsggrd1f5T/evlxJ5jH6sxNwAw+sH4hgyMTaA0+ad3WPNouMsGq6H6S3q0QHBeug8VBsDjOgn/cwjDuF/xwFfzzFoZxv+CHo+ARWxjG/YIfjoKHtzBC9Qt+TMrg/XdbGMb9gh/Oa/CPWxjG/YIfE6roH7YwjPsFP7gOFmdikTVfv+CHs+Cqepm1X/DDeYrerapq8T5fv+DHlDW4S+O3ufoFPyYWWW3ld5WE4LmYXkW3XCblwPQMXn7M0i/4wRosDlW0OFwHi8NOljjsRYuDYHEQLA6CxUGwOAgWB8HiIFgcBIuDYHEQLA6CxUGwOAgWB8HiIFgcBIuDYHEQLA6CxUGwOAgWB8HiIFgcBIuDYHEQLE4gwd09iB2DN4kjeCbCCG6+7h9uh24kRvBMBBF8PtHyoHrgIAAEz0QQwVc3mbY8VicuZLA4odbgUwqzBscmUBXdHfXQMXgUD4JngutgcRAsDoLFQbA4CBYHweIgWBwEi6MseLPZzNBL4ggL3pz+lI2u4M0xhYs3rCyYFN5LC95cfhaMruBTAiPYumGUcM/oV2AEWzeMEu4prMH7nAWPqJDPTQquprMV7JKeJadyroI3Vz8v//N5oj5tWwpKgocSFcGmDecJ90TaoEcEmzacKdxjug54PO1XFuo3X8GPC+5zwZt92XvS+Qp+5FmiFj09dygJflZFI9i8YZRwgyDYvKFPuABrZckFVkdSgi1kPNZe5RZYHSkJtphOg7xHckZMcCrvkXQoQrBTSoqVZSkJNsid559BOIVFcMB+/Ve/JzIdjSF43n5deXyPuBpjDQ7fr2kd65ySVNGh+zXOIa2UdCRFwUar4CURpVLSEV3BReftBVnBYsXwZFIUbLPfePWzZJIUbLFoIrgnTcEWsAYf0RVcdO18IVPByBtLnoKZfkcTSHBTVf2Jws3AUxu8BFNAjSeM4Gbxvt/WL3sERyeI4P7E991q+YHg2AQR/PXMhvXyI4hgyzVYvVwLmMEH1i9hBNtpkS/XAq3BJ63beujRWFMFGyec/mQfrIruJ+ndyvaxOtYJh2D3hiHDmftAsHvDC1ePT7IItw/hgzXYueGFHARTRTs3vGAvWD/hzMlMcNyEyzHbcxMckyynjySq6DwyI8+KOwXBmWQGgif2m8sLl8s4b0HweDKZaW5BsAN51Aq3JCA4z8zIhRQEZ5kZuZCE4BDwpulRFcy0f0JUcD6FW2gQLE4hgstdkUUF363BBa/IqoJvcrbkCVtW8DUItmwYJdz3INiyYZRwP8AabNgwSrifuFmRi6qoCxF8RWHZXJzg0tbjcgSfZmYE+zaMEu5nNvvr2XlAsODyXIrgi9dv1mDF5VlS8PcPyBpMU8nZW1Hws0QcIw/BMfp157mnEdMvgmP0686ApxEFFGtwhH7d8UhEquj5+52AYiJORlGwYiJORlIwXECwOAgWB8Hi6AsuvOLKTLC7rdKvmfIS7G5LcvvRhawET7CFYPOGAcMh2B11wazB5g1DhptiiyrauGHQcIXbmkBQwZ+vvy3DwQSCCN7Wl5PdwzyzAcYSJoPb6ngMKRkcn0BT9LZefiA4BYKtwevFO4ITIFyR1VRvCI5PwCr68/WPB8G+j9UBV0JeJu1WFRkcm7CCvznSH2YikmAfDLPfLlSSg3IJheC5IiE4ydcyyUEhGMEhevUlydcyyUEhGMEhevUlydcyyUEhGMEhevUlydcyyUFlKhhCgGBxECwOgsVBsDgIFgfB4iBYHASLg2BxECwOgsVBsDjpCN6tqqqy+DJQW1WLd4M4diPqWXf3dRnw+VpVL6NbJyN4tzpYaRxGPkR7iNNaGDYbUU9b2QhuD2G29ehRJSO4v+GpGbjveDz9VwLXBlqsRtSzrW0E97/f+FElI7jHP/VstViMqKdZ/tdE8OefbuNJTPDaW0z/ArRmgv1HdOQwLJs1uP31v9qlMkhLcOtf0/QZZ5V3FiPq6CZWG8FNd3rGbpXfGtzRGtVYdoItRtTRHOQaCV64zVApCTbJFtMp2ih/+0EZCT7+Zt/cg39HCoKb/nKzMXk1LYssmxHt+9+wY6yVb+jfuuNLrRQE9zQWv77lZZLViL6wyeBt3Q0qwyn689UoW8w2OsxGdMJoJ6tbzh3u/0tG8GkWMzDTGG1V2o2ox2qrsnXaQE1GMIQBweIgWBwEi4NgcRAsDoLFQbA4CBYHweIgWBwEi4NgcRAsDoLFQbA4CBYHweIgWBwEi4NgcRAsDoLFQbA4CBYHweIgWJxiBe9Wpxv0TnfLf/7H6tCHtChW8L493Rza/3Nbm53qkRblCv46a+p4019bVQhWoz8/Z1u/HY9qsDuXJy0KFtwf9vB1rziC5eirq6/bshGsR3dSy/m4GgTr0Z1ncj6OB8GCrJf/no+MQ7Ag7eLv83lTCBZkt/rrfPINghW5OsoOwZAlCBYHweIgWBwEi4NgcRAsDoLFQbA4CBYHweIgWBwEi4NgcRAsDoLFQbA4CBYHweIgWBwEi4NgcRAsDoLF+T9UinHPCkGysgAAAABJRU5ErkJggg==" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>meta &lt;-<span class="st"> </span><span class="kw">dangl2014</span>(<span class="dt">setnr=</span><span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">plotMetadata</span>(meta)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>However, generally one may require for benchmarking purposes a large number of datasets drawn from one particular metadata scenario. This works as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">generateDatabase</span>(<span class="dt">name =</span> <span class="kw">system.file</span>(<span class="st">&quot;dangl2014.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;bdlp&quot;</span>), <span class="dt">setnr =</span> <span class="dv">1</span>, <span class="dt">draws =</span> <span class="dv">50</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">generateDatabase</span>(<span class="dt">name =</span> <span class="kw">system.file</span>(<span class="st">&quot;dangl2014.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;bdlp&quot;</span>), <span class="dt">setnr =</span> <span class="dv">1</span>, <span class="dt">draws =</span> <span class="dv">50</span>)</span></code></pre></div>
 <p>Which creates an SQLite database in the current working directory that contains 50 datasets drawn from matadata object 1 of the setup name. Of course, <code>metaseedinfo</code> and <code>seedinfo</code> is also available here. The random number seed starts at a certain base value (default 100) and increments by 1 for each draw. Therefore draw number 1 uses seed 101, etc. If a different increment step is desired, one can set the argument <code>increment</code> to this value.</p>
 </div>
 <div id="how-does-it-work" class="section level1">
 <h1>How does it work?</h1>
 <p>In order to explore the concept in more depth we look at the function body that is in the included setup file:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dangl2014 &lt;-<span class="st"> </span>function(<span class="dt">setnr =</span> <span class="ot">NULL</span>, 
-                      <span class="dt">seedinfo =</span> <span class="kw">list</span>(<span class="dv">100</span>, 
-                                      <span class="kw">paste</span>(R.version$major, R.version$minor, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>),
-                                      <span class="kw">RNGkind</span>()), 
-                      <span class="dt">info =</span> <span class="ot">FALSE</span>, 
-                      <span class="dt">metaseedinfo =</span> <span class="kw">list</span>(<span class="dv">100</span>, 
-                                          <span class="kw">paste</span>(R.version$major, R.version$minor, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>),
-                                          <span class="kw">RNGkind</span>())){
-
-  inf &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">40</span>), <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">shape =</span> <span class="kw">c</span>(<span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;spherical&quot;</span>))
-  ref &lt;-<span class="st"> &quot;Dangl R. (2014) A small simulation study. Journal of Simple Datasets 10(2), 1-10&quot;</span>
-  if(info ==<span class="st"> </span>T) <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">summary =</span> inf, <span class="dt">reference =</span> ref))
-
-  if(<span class="kw">is.null</span>(metaseedinfo)) metaseedinfo &lt;-<span class="st"> </span>seedinfo
-
-  <span class="kw">set.seed</span>(metaseedinfo[[<span class="dv">1</span>]])
-  <span class="kw">RNGversion</span>(metaseedinfo[[<span class="dv">2</span>]])
-  <span class="kw">RNGkind</span>(metaseedinfo[[<span class="dv">3</span>]][<span class="dv">1</span>], metaseedinfo[[<span class="dv">3</span>]][<span class="dv">2</span>])
-
-  if(setnr ==<span class="st"> </span><span class="dv">1</span>) {
-    <span class="kw">return</span>(<span class="kw">new</span>(<span class="st">&quot;metadata.metric&quot;</span>, 
-      <span class="dt">clusters =</span> <span class="kw">list</span>(<span class="dt">c1 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)),
-                      <span class="dt">c2 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(-<span class="dv">1</span>,-<span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))),
-      <span class="dt">genfunc =</span> MASS::mvrnorm, <span class="dt">seedinfo =</span> seedinfo))
-  }
-  if(setnr ==<span class="st"> </span><span class="dv">2</span>){
-    <span class="kw">return</span>(<span class="kw">new</span>(<span class="st">&quot;metadata.metric&quot;</span>, 
-      <span class="dt">clusters =</span> <span class="kw">list</span>(<span class="dt">c1 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)),
-                      <span class="dt">c2 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">mu =</span> <span class="kw">c</span>(-<span class="dv">1</span>,-<span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))),
-      <span class="dt">genfunc =</span> MASS::mvrnorm, <span class="dt">seedinfo =</span> seedinfo))
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>dangl2014 &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">setnr =</span> <span class="ot">NULL</span>, </span>
+<span id="cb12-2"><a href="#cb12-2"></a>                      <span class="dt">seedinfo =</span> <span class="kw">list</span>(<span class="dv">100</span>, </span>
+<span id="cb12-3"><a href="#cb12-3"></a>                                      <span class="kw">paste</span>(R.version<span class="op">$</span>major, R.version<span class="op">$</span>minor, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>),</span>
+<span id="cb12-4"><a href="#cb12-4"></a>                                      <span class="kw">RNGkind</span>()), </span>
+<span id="cb12-5"><a href="#cb12-5"></a>                      <span class="dt">info =</span> <span class="ot">FALSE</span>, </span>
+<span id="cb12-6"><a href="#cb12-6"></a>                      <span class="dt">metaseedinfo =</span> <span class="kw">list</span>(<span class="dv">100</span>, </span>
+<span id="cb12-7"><a href="#cb12-7"></a>                                          <span class="kw">paste</span>(R.version<span class="op">$</span>major, R.version<span class="op">$</span>minor, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>),</span>
+<span id="cb12-8"><a href="#cb12-8"></a>                                          <span class="kw">RNGkind</span>())){</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a>  inf &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">40</span>), <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">shape =</span> <span class="kw">c</span>(<span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;spherical&quot;</span>))</span>
+<span id="cb12-11"><a href="#cb12-11"></a>  ref &lt;-<span class="st"> &quot;Dangl R. (2014) A small simulation study. Journal of Simple Datasets 10(2), 1-10&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>  <span class="cf">if</span>(info <span class="op">==</span><span class="st"> </span>T) <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">summary =</span> inf, <span class="dt">reference =</span> ref))</span>
+<span id="cb12-13"><a href="#cb12-13"></a></span>
+<span id="cb12-14"><a href="#cb12-14"></a>  <span class="cf">if</span>(<span class="kw">is.null</span>(metaseedinfo)) metaseedinfo &lt;-<span class="st"> </span>seedinfo</span>
+<span id="cb12-15"><a href="#cb12-15"></a></span>
+<span id="cb12-16"><a href="#cb12-16"></a>  <span class="kw">set.seed</span>(metaseedinfo[[<span class="dv">1</span>]])</span>
+<span id="cb12-17"><a href="#cb12-17"></a>  <span class="kw">RNGversion</span>(metaseedinfo[[<span class="dv">2</span>]])</span>
+<span id="cb12-18"><a href="#cb12-18"></a>  <span class="kw">RNGkind</span>(metaseedinfo[[<span class="dv">3</span>]][<span class="dv">1</span>], metaseedinfo[[<span class="dv">3</span>]][<span class="dv">2</span>])</span>
+<span id="cb12-19"><a href="#cb12-19"></a></span>
+<span id="cb12-20"><a href="#cb12-20"></a>  <span class="cf">if</span>(setnr <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</span>
+<span id="cb12-21"><a href="#cb12-21"></a>    <span class="kw">return</span>(<span class="kw">new</span>(<span class="st">&quot;metadata.metric&quot;</span>, </span>
+<span id="cb12-22"><a href="#cb12-22"></a>      <span class="dt">clusters =</span> <span class="kw">list</span>(<span class="dt">c1 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)),</span>
+<span id="cb12-23"><a href="#cb12-23"></a>                      <span class="dt">c2 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))),</span>
+<span id="cb12-24"><a href="#cb12-24"></a>      <span class="dt">genfunc =</span> MASS<span class="op">::</span>mvrnorm, <span class="dt">seedinfo =</span> seedinfo))</span>
+<span id="cb12-25"><a href="#cb12-25"></a>  }</span>
+<span id="cb12-26"><a href="#cb12-26"></a>  <span class="cf">if</span>(setnr <span class="op">==</span><span class="st"> </span><span class="dv">2</span>){</span>
+<span id="cb12-27"><a href="#cb12-27"></a>    <span class="kw">return</span>(<span class="kw">new</span>(<span class="st">&quot;metadata.metric&quot;</span>, </span>
+<span id="cb12-28"><a href="#cb12-28"></a>      <span class="dt">clusters =</span> <span class="kw">list</span>(<span class="dt">c1 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>)),</span>
+<span id="cb12-29"><a href="#cb12-29"></a>                      <span class="dt">c2 =</span> <span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>), <span class="dt">Sigma=</span><span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))),</span>
+<span id="cb12-30"><a href="#cb12-30"></a>      <span class="dt">genfunc =</span> MASS<span class="op">::</span>mvrnorm, <span class="dt">seedinfo =</span> seedinfo))</span>
+<span id="cb12-31"><a href="#cb12-31"></a>  }</span>
+<span id="cb12-32"><a href="#cb12-32"></a>}</span></code></pre></div>
 <p>Again, we can see that the first part of the function provides the information output that has already been described above. The second half of the function specifies the metadata objects. The function arguments are fixed and must not be changed. In the middle, the metaseedinfo parameters are applied in case random effects are used in metadata generation, and the seedinfo parameters are passed on to the metadata object output. This is certainly a simple example; much more complex scenarios can be realised. The package functions merely assemble the dataset based on the parameters supplied in the setup file cluster by cluster. Therefore, any random number generating function of any R package can be used. Still, also custom functions written from scratch can be used and included in the setup file. The only strict limitation that is imposed on the setup file is that the main function that is then used for data generation must produce the metadata files according to the structure defined in the package.</p>
 </div>
 <div id="how-can-i-write-a-new-benchmarking-setup" class="section level1">
@@ -248,63 +507,66 @@ data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
 </ul>
 <p>At the moment, 5 types of metadata objects are supported: metric, ordinal, binary, functional and random string data. It is of course possible to have several types of metadata in a benchmarking setup. At the moment it is not yet possible to have a metadata object that mixes several types of data in one dataset (e.g. some metric, ordinal and binary variables), but support for this is planned for the next release.</p>
 <p>The setup file does not need to be created completely from scratch; two function can do that to different degrees. Function <code>createFileskeleton</code> creates a blank template that fills in the most important information (function names, arguments, return values etc.). A much more convenient solution is saveSetup - if several metadata objects have been created (this in turn can be done with the help of <code>initializeObject</code>), a setup file can be written to the disk without any further action necessary. It can be used immediately for data generation. A simple example looks as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(MASS)
-m1 &lt;-<span class="st"> </span><span class="kw">initializeObject</span>(<span class="dt">type =</span> <span class="st">&quot;metric&quot;</span>, <span class="dt">genfunc =</span> mvrnorm, <span class="dt">k =</span> <span class="dv">2</span>)
-m1@clusters$cl1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-m1@clusters$cl2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(-<span class="dv">1</span>,-<span class="dv">2</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-
-m2 &lt;-<span class="st"> </span><span class="kw">initializeObject</span>(<span class="dt">type =</span> <span class="st">&quot;metric&quot;</span>, <span class="dt">genfunc =</span> mvrnorm, <span class="dt">k =</span> <span class="dv">2</span>)
-m2@clusters$cl1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">44</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-m2@clusters$cl2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">66</span>, <span class="dt">mu =</span> <span class="kw">c</span>(-<span class="dv">5</span>,-<span class="dv">6</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-
-<span class="kw">saveSetup</span>(<span class="dt">name=</span><span class="st">&quot;miller2012.R&quot;</span>, <span class="dt">author=</span><span class="st">&quot;Mister Miller&quot;</span>, <span class="dt">mail=</span><span class="st">&quot;mister.miller@edu.com&quot;</span>,
-            <span class="dt">inst=</span><span class="st">&quot;Unknown University&quot;</span>, <span class="dt">cit=</span><span class="st">&quot;Simple Data, pp. 23-24&quot;</span>, <span class="dt">objects=</span><span class="kw">list</span>(m1, m2),
-            <span class="dt">table=</span><span class="kw">data.frame</span>(<span class="dt">n =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">110</span>), <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">shape =</span> <span class="kw">c</span>(<span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;spherical&quot;</span>)))
-
-<span class="kw">generateDatabase</span>(<span class="dt">name =</span> <span class="st">&quot;miller2012.R&quot;</span>, <span class="dt">setnr =</span> <span class="dv">1</span>, <span class="dt">draws =</span> <span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">require</span>(MASS)</span>
+<span id="cb13-2"><a href="#cb13-2"></a>m1 &lt;-<span class="st"> </span><span class="kw">initializeObject</span>(<span class="dt">type =</span> <span class="st">&quot;metric&quot;</span>, <span class="dt">genfunc =</span> mvrnorm, <span class="dt">k =</span> <span class="dv">2</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>m1<span class="op">@</span>clusters<span class="op">$</span>cl1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb13-4"><a href="#cb13-4"></a>m1<span class="op">@</span>clusters<span class="op">$</span>cl2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">25</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb13-5"><a href="#cb13-5"></a></span>
+<span id="cb13-6"><a href="#cb13-6"></a>m2 &lt;-<span class="st"> </span><span class="kw">initializeObject</span>(<span class="dt">type =</span> <span class="st">&quot;metric&quot;</span>, <span class="dt">genfunc =</span> mvrnorm, <span class="dt">k =</span> <span class="dv">2</span>)</span>
+<span id="cb13-7"><a href="#cb13-7"></a>m2<span class="op">@</span>clusters<span class="op">$</span>cl1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">44</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb13-8"><a href="#cb13-8"></a>m2<span class="op">@</span>clusters<span class="op">$</span>cl2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">n =</span> <span class="dv">66</span>, <span class="dt">mu =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="op">-</span><span class="dv">6</span>), <span class="dt">Sigma =</span> <span class="kw">diag</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb13-9"><a href="#cb13-9"></a></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="kw">saveSetup</span>(<span class="dt">name=</span><span class="st">&quot;miller2012.R&quot;</span>, <span class="dt">author=</span><span class="st">&quot;John Miller&quot;</span>, <span class="dt">mail=</span><span class="st">&quot;john.miller@edu.com&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11"></a>            <span class="dt">inst=</span><span class="st">&quot;Example University&quot;</span>, <span class="dt">cit=</span><span class="st">&quot;Simple Data, pp. 23-24&quot;</span>, <span class="dt">objects=</span><span class="kw">list</span>(m1, m2),</span>
+<span id="cb13-12"><a href="#cb13-12"></a>            <span class="dt">table=</span><span class="kw">data.frame</span>(<span class="dt">n =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">110</span>), <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">shape =</span> <span class="kw">c</span>(<span class="st">&quot;spherical&quot;</span>, <span class="st">&quot;spherical&quot;</span>)))</span>
+<span id="cb13-13"><a href="#cb13-13"></a></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="kw">generateDatabase</span>(<span class="dt">name =</span> <span class="st">&quot;miller2012.R&quot;</span>, <span class="dt">setnr =</span> <span class="dv">1</span>, <span class="dt">draws =</span> <span class="dv">20</span>)</span></code></pre></div>
 <p>The procedure is basically identical for ordinal, binary and random string data. Functional data requires a structurally quite different metadata object. It is advised to have a look at the class description for functional metadata in the package manual. An example for functional data works as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Fun1 &lt;-<span class="st"> </span>function(x){x^<span class="dv">2</span>}
-Fun2 &lt;-<span class="st"> </span>function(x){<span class="kw">sqrt</span>(x)}
-Fun3 &lt;-<span class="st"> </span>function(x){<span class="kw">sin</span>(<span class="dv">2</span>*pi*x)}
-functions &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Fun1 =</span> Fun1, <span class="dt">Fun2 =</span> Fun2, <span class="dt">Fun3 =</span> Fun3)
-
-interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)
-gridPoints &lt;-<span class="st"> </span><span class="dv">30</span>
-
-sd &lt;-<span class="st"> </span><span class="fl">0.2</span>
-n &lt;-<span class="st"> </span><span class="dv">100</span>
-minTimePoints &lt;-<span class="st"> </span><span class="dv">5</span>
-maxTimePoints &lt;-<span class="st"> </span><span class="dv">10</span>
-regular &lt;-<span class="st"> </span><span class="ot">FALSE</span>
-
-grid &lt;-<span class="st"> </span><span class="kw">sampleGrid</span>(n, minTimePoints, maxTimePoints, gridPoints, regular)
-
-meta &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;metadata.functional&quot;</span>, <span class="dt">functions =</span> functions, 
-                                   <span class="dt">gridMatrix =</span> grid,
-                                   <span class="dt">sd=</span>sd,
-                                   <span class="dt">sd_distribution=</span><span class="st">&quot;rnorm&quot;</span>,
-                                   <span class="dt">interval =</span> interval, 
-                                   <span class="dt">resolution=</span>gridPoints,
-                                   <span class="dt">total_n =</span> n, 
-                                   <span class="dt">minTimePoints =</span> minTimePoints, 
-                                   <span class="dt">maxTimePoints =</span> maxTimePoints, 
-                                   <span class="dt">regular=</span>F)
-
-data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)
-<span class="kw">head</span>(data)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>Fun1 &lt;-<span class="st"> </span><span class="cf">function</span>(x){x<span class="op">^</span><span class="dv">2</span>}</span>
+<span id="cb14-2"><a href="#cb14-2"></a>Fun2 &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw">sqrt</span>(x)}</span>
+<span id="cb14-3"><a href="#cb14-3"></a>Fun3 &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw">sin</span>(<span class="dv">2</span><span class="op">*</span>pi<span class="op">*</span>x)}</span>
+<span id="cb14-4"><a href="#cb14-4"></a>functions &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Fun1 =</span> Fun1, <span class="dt">Fun2 =</span> Fun2, <span class="dt">Fun3 =</span> Fun3)</span>
+<span id="cb14-5"><a href="#cb14-5"></a></span>
+<span id="cb14-6"><a href="#cb14-6"></a>interval &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb14-7"><a href="#cb14-7"></a>gridPoints &lt;-<span class="st"> </span><span class="dv">30</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a></span>
+<span id="cb14-9"><a href="#cb14-9"></a>sd &lt;-<span class="st"> </span><span class="fl">0.2</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a>n &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>minTimePoints &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a>maxTimePoints &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a>regular &lt;-<span class="st"> </span><span class="ot">FALSE</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a></span>
+<span id="cb14-15"><a href="#cb14-15"></a>grid &lt;-<span class="st"> </span><span class="kw">sampleGrid</span>(n, minTimePoints, maxTimePoints, gridPoints, regular)</span>
+<span id="cb14-16"><a href="#cb14-16"></a></span>
+<span id="cb14-17"><a href="#cb14-17"></a>meta &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;metadata.functional&quot;</span>, <span class="dt">functions =</span> functions, </span>
+<span id="cb14-18"><a href="#cb14-18"></a>                                   <span class="dt">gridMatrix =</span> grid,</span>
+<span id="cb14-19"><a href="#cb14-19"></a>                                   <span class="dt">sd=</span>sd,</span>
+<span id="cb14-20"><a href="#cb14-20"></a>                                   <span class="dt">sd_distribution=</span><span class="st">&quot;rnorm&quot;</span>,</span>
+<span id="cb14-21"><a href="#cb14-21"></a>                                   <span class="dt">interval =</span> interval, </span>
+<span id="cb14-22"><a href="#cb14-22"></a>                                   <span class="dt">resolution=</span>gridPoints,</span>
+<span id="cb14-23"><a href="#cb14-23"></a>                                   <span class="dt">total_n =</span> n, </span>
+<span id="cb14-24"><a href="#cb14-24"></a>                                   <span class="dt">minTimePoints =</span> minTimePoints, </span>
+<span id="cb14-25"><a href="#cb14-25"></a>                                   <span class="dt">maxTimePoints =</span> maxTimePoints, </span>
+<span id="cb14-26"><a href="#cb14-26"></a>                                   <span class="dt">regular=</span>F)</span>
+<span id="cb14-27"><a href="#cb14-27"></a></span>
+<span id="cb14-28"><a href="#cb14-28"></a>data &lt;-<span class="st"> </span><span class="kw">generateData</span>(meta)</span>
+<span id="cb14-29"><a href="#cb14-29"></a><span class="kw">head</span>(data)</span></code></pre></div>
 <pre><code>##   curves xvalvector yvalvector
-## 1      1 0.03448276 0.23050712
-## 2      1 0.10344828 0.21683570
-## 3      1 0.17241379 0.07187442
-## 4      1 0.31034483 0.05518145
-## 5      1 0.34482759 0.43306242
-## 6      1 0.44827586 0.03336914</code></pre>
+## 1      1  0.0000000 0.22931806
+## 2      1  0.1379310 0.22515913
+## 3      1  0.2413793 0.10041188
+## 4      1  0.2758621 0.03496742
+## 5      1  0.3448276 0.43306242
+## 6      1  0.4827586 0.06547377</code></pre>
 </div>
 <div id="storing-and-sharing-setup-files" class="section level1">
 <h1>Storing and sharing setup files</h1>
 <p>New setup files that are used in actual benchmarking studies can be added to the repository of the Benchmark Data Library Project (link above), which is highly appreciated! This might greatly help other researchers who like to use artificial data in their studies and who do not want to reinvent the wheel. Furthermore, benchmarking studies are much more meaningful if methods can be compared on the exact same data from another study. This is actually one of the major effects that are intended to come along with using this package.</p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

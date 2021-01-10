@@ -1,33 +1,33 @@
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(bdlp)
 source(system.file("dangl2014.R", package = "bdlp"))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 dangl2014(info=T)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(MASS)
 meta <- dangl2014(setnr=1)
 meta
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(MASS)
 data <- generateData(meta)
 head(data)
 
-## ------------------------------------------------------------------------
-meta <- dangl2014(1, seedinfo = list(120, "3.1.3", c("Mersenne-Twister", "Inversion")))
+## -----------------------------------------------------------------------------
+meta <- dangl2014(1, seedinfo = list(120, "4.0.3", c("Mersenne-Twister", "Inversion")))
 data <- generateData(meta)
 head(data)
 
-## ---- fig.width=5, fig.height=5, fig.align='center'----------------------
+## ---- fig.width=5, fig.height=5, fig.align='center'---------------------------
 meta <- dangl2014(setnr=1)
 plotMetadata(meta)
 
-## ----results="hide", message=F, warning=F--------------------------------
-generateDatabase(name = system.file("dangl2014.R", package = "bdlp"), setnr = 1, draws = 50)
+## ----eval=FALSE, message=FALSE, warning=FALSE, include=TRUE, results="hide"----
+#  generateDatabase(name = system.file("dangl2014.R", package = "bdlp"), setnr = 1, draws = 50)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 dangl2014 <- function(setnr = NULL, 
                       seedinfo = list(100, 
                                       paste(R.version$major, R.version$minor, sep = "."),
@@ -61,23 +61,23 @@ dangl2014 <- function(setnr = NULL,
   }
 }
 
-## ----results="hide", message=F, warning=F--------------------------------
-require(MASS)
-m1 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
-m1@clusters$cl1 <- list(n = 25, mu = c(4,5), Sigma = diag(1,2))
-m1@clusters$cl2 <- list(n = 25, mu = c(-1,-2), Sigma = diag(1,2))
+## ----eval=FALSE, message=FALSE, warning=FALSE, include=TRUE, results="hide"----
+#  require(MASS)
+#  m1 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
+#  m1@clusters$cl1 <- list(n = 25, mu = c(4,5), Sigma = diag(1,2))
+#  m1@clusters$cl2 <- list(n = 25, mu = c(-1,-2), Sigma = diag(1,2))
+#  
+#  m2 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
+#  m2@clusters$cl1 <- list(n = 44, mu = c(1,2), Sigma = diag(1,2))
+#  m2@clusters$cl2 <- list(n = 66, mu = c(-5,-6), Sigma = diag(1,2))
+#  
+#  saveSetup(name="miller2012.R", author="John Miller", mail="john.miller@edu.com",
+#              inst="Example University", cit="Simple Data, pp. 23-24", objects=list(m1, m2),
+#              table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))
+#  
+#  generateDatabase(name = "miller2012.R", setnr = 1, draws = 20)
 
-m2 <- initializeObject(type = "metric", genfunc = mvrnorm, k = 2)
-m2@clusters$cl1 <- list(n = 44, mu = c(1,2), Sigma = diag(1,2))
-m2@clusters$cl2 <- list(n = 66, mu = c(-5,-6), Sigma = diag(1,2))
-
-saveSetup(name="miller2012.R", author="Mister Miller", mail="mister.miller@edu.com",
-            inst="Unknown University", cit="Simple Data, pp. 23-24", objects=list(m1, m2),
-            table=data.frame(n = c(50, 110), k = c(2,2), shape = c("spherical", "spherical")))
-
-generateDatabase(name = "miller2012.R", setnr = 1, draws = 20)
-
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 Fun1 <- function(x){x^2}
 Fun2 <- function(x){sqrt(x)}
 Fun3 <- function(x){sin(2*pi*x)}

@@ -4,8 +4,12 @@
 \alias{initializeObject}
 \title{Initialize a new metadata object}
 \usage{
-initializeObject(type, k, genfunc, seed = list(100, paste(R.version$major,
-  R.version$minor, sep = "."), RNGkind()))
+initializeObject(
+  type,
+  k,
+  genfunc,
+  seed = list(100, paste(R.version$major, R.version$minor, sep = "."), RNGkind())
+)
 }
 \arguments{
 \item{type}{The data type for the new object}
